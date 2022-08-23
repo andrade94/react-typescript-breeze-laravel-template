@@ -1,38 +1,45 @@
-import React, { useEffect } from 'react';
-import Button from '@/Components/Button';
-import Guest from '@/Layouts/Guest';
-import Input from '@/Components/Input';
-import InputError from '@/Components/InputError';
-import Label from '@/Components/Label';
-import { Head, Link, useForm } from '@inertiajs/inertia-react';
+import React, { useEffect } from "react";
+import Button from "@/Components/Button";
+import Guest from "@/Layouts/Guest";
+import Input from "@/Components/Input";
+import Label from "@/Components/Label";
+import ValidationErrors from "@/Components/ValidationErrors";
+import { Head, Link, useForm } from "@inertiajs/inertia-react";
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
     });
 
     useEffect(() => {
         return () => {
-            reset('password', 'password_confirmation');
+            reset("password", "password_confirmation");
         };
     }, []);
 
-    const onHandleChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
+    const onHandleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setData(
+            event.target.name as "email" | "password" | "name",
+            event.target.type === "checkbox"
+                ? event.target.checked + ""
+                : event.target.value
+        );
     };
 
-    const submit = (e) => {
+    const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        post(route('register'));
+        post(route("register"));
     };
 
     return (
         <Guest>
-            <Head title="Register" />
+            <Head title="Nuevo Registro" />
+
+            <ValidationErrors errors={errors} />
 
             <form onSubmit={submit}>
                 <div>
@@ -48,8 +55,6 @@ export default function Register() {
                         handleChange={onHandleChange}
                         required
                     />
-
-                    <InputError message={errors.name} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -64,8 +69,6 @@ export default function Register() {
                         handleChange={onHandleChange}
                         required
                     />
-
-                    <InputError message={errors.email} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
@@ -80,12 +83,13 @@ export default function Register() {
                         handleChange={onHandleChange}
                         required
                     />
-
-                    <InputError message={errors.password} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
-                    <Label forInput="password_confirmation" value="Confirm Password" />
+                    <Label
+                        forInput="password_confirmation"
+                        value="Confirm Password"
+                    />
 
                     <Input
                         type="password"
@@ -95,17 +99,21 @@ export default function Register() {
                         handleChange={onHandleChange}
                         required
                     />
-
-                    <InputError message={errors.password_confirmation} className="mt-2" />
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
-                    <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
-                        Already registered?
+                    <Link
+                        href={route("login")}
+                        className="underline text-sm text-gray-600 hover:text-gray-900"
+                    >
+                        Iniciar sesión
                     </Link>
 
-                    <Button className="ml-4" processing={processing}>
-                        Register
+                    <Button
+                        className="ml-4 bg-gray-900"
+                        processing={processing}
+                    >
+                        Registrarse
                     </Button>
                 </div>
             </form>
